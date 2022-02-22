@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Auth } from 'src/common/decarators';
 
 import { CreatePostDto, EditPostDto } from './dto';
 import { PostService } from './post.service';
@@ -21,12 +22,13 @@ export class PostController {
        return this.postService.getOne(id)
     }
 
-
+    @Auth()
     @Post()
     createOne(@Body() dto:CreatePostDto){
         return this.postService.createOne(dto)
     }
 
+    @Auth()
     @Put(':id')
     editOne(
         @Param('id') id:number,
@@ -35,6 +37,7 @@ export class PostController {
         return this.postService.editOne(id,dto)
     }
 
+    @Auth()
     @Delete(':id')
     deleteOne(
         @Param('id') id:number

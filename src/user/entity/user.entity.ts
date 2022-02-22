@@ -18,6 +18,10 @@ export class User {
     @Column({type:'varchar', length:128, nullable:false, select:false})
     password:string;
 
+
+    @Column({type:'simple-array'})
+    roles:string[];
+
     @Column({type:'boolean', default :true})
     status:boolean;
 

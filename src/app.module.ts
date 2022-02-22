@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AccessControlModule } from 'nest-access-control';
+
+
+
 import {DATABASE_HOST,DATABASE_PORT,DATABASE_USERNAME,DATABASE_PASSWORD,DATABASE_NAME} from './config/constan'
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,6 +13,7 @@ import { PostModule } from './post/post.module';
 import { User } from './user/entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { roles } from './app.role';
 
 @Module({
   imports: [   
@@ -35,6 +40,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal:true,
       envFilePath: '.env'
     }),
+    AccessControlModule.forRoles(roles)
   ],
   controllers: [AppController],
   providers: [AppService],

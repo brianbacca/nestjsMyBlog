@@ -1,8 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/common/decarators';
 
 import { CreateUserDto, EditUserDto } from './dtos';
 import { UserService } from './user.service';
 
+
+@ApiTags('User')
 @Controller('user')
 export class UserController {
     
@@ -25,7 +29,7 @@ export class UserController {
        const data =  await this.userService.getOne(id)
        return data
     }
-
+    @Auth()
     @Post()
     async createOne(@Body() dto:CreateUserDto){
         const data = await this.userService.createOne(dto)
@@ -34,6 +38,7 @@ export class UserController {
         }
     }
 
+    @Auth()
     @Put(':id')
     async editOne(
         @Param('id') id:number,
@@ -45,6 +50,7 @@ export class UserController {
         }
     }
 
+    @Auth()
     @Delete(':id')
    async  deleteOne(
         @Param('id') id:number,
