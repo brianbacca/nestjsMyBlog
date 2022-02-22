@@ -1,5 +1,6 @@
 import { hash } from "bcryptjs";
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Post } from "src/post/entities";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -36,4 +37,12 @@ export class User {
         }
         this.password = await hash(this.password,10)
     }
+
+    
+  @OneToOne(
+    _ => Post,
+    post => post.author,
+    { cascade: true },
+  )
+  posts: Post;
 }

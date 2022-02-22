@@ -26,10 +26,11 @@ export class UserService {
     }
 
 
-    async getOne(id:number):Promise<User>{
+    async getOne(id:number, userEntity?: User):Promise<User>{
         const user  = await this.userRepository.findOne(id)
+        .then(u=>!userEntity ? u : !!u && userEntity.id === u.id ? u : null)
         if(!user) {
-            throw new NotFoundException('User does not exists')
+            throw new NotFoundException('User does not exists or unauthorize')
     }
     return user;
 }
@@ -48,8 +49,8 @@ export class UserService {
         return user;
     }
 
-   async  editOne(id:number, dto:EditUserDto){
-       const user = await this.getOne(id)
+   async  editOne(id:number, dto:EditUserDto, userEntity?: User){
+       const user = await this.getOne(id,userEntity)
        const editUser = Object.assign(user,dto)
        const userEdit = await this.userRepository.save(editUser)
        delete userEdit.password;
@@ -57,8 +58,8 @@ export class UserService {
    }
 
 
-   async  deleteOne(id:number){
-       const user = await this.getOne(id)
+   async  deleteOne(id:number, userEntity?: User){
+       const user = await this.getOne(id,userEntity)
        return this.userRepository.remove(user)
    }
 

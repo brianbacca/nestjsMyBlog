@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entity';
 import { Repository } from 'typeorm';
 
 import { CreatePostDto, EditPostDto } from './dto';
@@ -16,22 +17,22 @@ export class PostService {
         return await this.postRepository.find()
     }
 
-    async getOne(id:number){
-        const One =  await this.postRepository.findOne(id)
-        if(!One){
-            throw new NotFoundException()
-        }
-
-        return One;
+    async getOne(id:number, author?: User){
+        const post = await this.postRepository
+        .findOne(id)
+        .then(p => (!author ? p : !!p && author.id === p.author.id ? p : null));
+      if (!post)
+        throw new NotFoundException('Post does not exist or unauthorized');
+      return post;
     }
 
-    async createOne(dto:CreatePostDto){
-        const post = await this.postRepository.create(dto as any);
+    async createOne(dto:CreatePostDto, author: User){
+        const post = await this.postRepository.create({...dto as any , author});
         return await this.postRepository.save(post)
     }
 
-   async editOne(id:number, dto:EditPostDto){
-        const post = await this.postRepository.findOne(id);
+   async editOne(id:number, dto:EditPostDto, author?: User){
+        const post = await this.getOne(id, author);
         if(!post ){
             throw new NotFoundException('Post does not exist');
         }
@@ -39,8 +40,9 @@ export class PostService {
         return await this.postRepository.save(editPost)
     }
 
-    async deleteOne(id:number){
-        return await this.postRepository.delete(id)
+    async deleteOne(id:number,author?: User){
+        const post = await this.getOne(id, author);
+        return await this.postRepository.remove(post)
     }
 
 }
