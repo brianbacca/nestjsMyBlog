@@ -29226,3 +29226,28 @@
 [2022-02-22T18:20:36.538Z][QUERY]: SELECT `Post`.`id` AS `Post_id`, `Post`.`status` AS `Post_status`, `Post`.`created_at` AS `Post_created_at` FROM `posts` `Post` WHERE `Post`.`id` = ? -- PARAMETERS: [4]
 [2022-02-22T18:20:36.557Z][QUERY]: COMMIT
 [2022-02-22T18:20:43.489Z][QUERY]: SELECT `Post`.`id` AS `Post_id`, `Post`.`slug` AS `Post_slug`, `Post`.`title` AS `Post_title`, `Post`.`excerpt` AS `Post_excerpt`, `Post`.`content` AS `Post_content`, `Post`.`category` AS `Post_category`, `Post`.`tags` AS `Post_tags`, `Post`.`status` AS `Post_status`, `Post`.`created_at` AS `Post_created_at`, `Post`.`author` AS `Post_author`, `Post_author`.`id` AS `Post_author_id`, `Post_author`.`name` AS `Post_author_name`, `Post_author`.`last_name` AS `Post_author_last_name`, `Post_author`.`email` AS `Post_author_email`, `Post_author`.`roles` AS `Post_author_roles`, `Post_author`.`status` AS `Post_author_status`, `Post_author`.`created_at` AS `Post_author_created_at` FROM `posts` `Post` LEFT JOIN `users` `Post_author` ON `Post_author`.`id`=`Post`.`author`
+[2022-02-23T01:52:40.065Z][QUERY]: START TRANSACTION
+[2022-02-23T01:52:40.078Z][QUERY]: SELECT DATABASE() AS `db_name`
+[2022-02-23T01:52:40.092Z][QUERY]: 
+                        SELECT `TABLE_SCHEMA`,
+                               `TABLE_NAME`
+                        FROM `INFORMATION_SCHEMA`.`TABLES`
+                        WHERE `TABLE_SCHEMA` = 'myblog_db'
+                          AND `TABLE_NAME` = 'users'
+                     UNION 
+                        SELECT `TABLE_SCHEMA`,
+                               `TABLE_NAME`
+                        FROM `INFORMATION_SCHEMA`.`TABLES`
+                        WHERE `TABLE_SCHEMA` = 'myblog_db'
+                          AND `TABLE_NAME` = 'posts'
+                    
+[2022-02-23T01:52:40.162Z][QUERY]: SELECT * FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA` = 'myblog_db' AND `TABLE_NAME` = 'typeorm_metadata'
+[2022-02-23T01:52:40.189Z][QUERY]: CREATE TABLE `users` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NULL, `last_name` varchar(255) NULL, `email` varchar(128) NULL, `password` varchar(128) NOT NULL, `roles` text NOT NULL, `status` tinyint NOT NULL DEFAULT 1, `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), UNIQUE INDEX `IDX_97672ac88f789774dd47f7c8be` (`email`), PRIMARY KEY (`id`)) ENGINE=InnoDB
+[2022-02-23T01:52:40.314Z][QUERY]: CREATE TABLE `posts` (`id` int NOT NULL AUTO_INCREMENT, `slug` text NOT NULL, `title` varchar(150) NOT NULL, `excerpt` varchar(255) NOT NULL, `content` text NOT NULL, `category` varchar(100) NULL, `tags` text NOT NULL, `status` tinyint NOT NULL DEFAULT 1, `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `author` int NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB
+[2022-02-23T01:52:40.468Z][QUERY]: ALTER TABLE `posts` ADD CONSTRAINT `FK_d03fb91772937997f010466a007` FOREIGN KEY (`author`) REFERENCES `users`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+[2022-02-23T01:52:40.757Z][QUERY]: COMMIT
+[2022-02-23T01:52:43.493Z][QUERY]: SELECT `User`.`id` AS `User_id`, `User`.`name` AS `User_name`, `User`.`last_name` AS `User_last_name`, `User`.`email` AS `User_email`, `User`.`roles` AS `User_roles`, `User`.`status` AS `User_status`, `User`.`created_at` AS `User_created_at` FROM `users` `User` WHERE email = ? -- PARAMETERS: ["mario22@Gmail.com"]
+[2022-02-23T01:52:43.525Z][QUERY]: START TRANSACTION
+[2022-02-23T01:52:43.867Z][QUERY]: INSERT INTO `users`(`id`, `name`, `last_name`, `email`, `password`, `roles`, `status`, `created_at`) VALUES (DEFAULT, DEFAULT, DEFAULT, ?, ?, ?, DEFAULT, DEFAULT) -- PARAMETERS: ["mario22@Gmail.com","$2a$10$TefbFhfQSxbKsa19rvxgSOJ1zCOobR9TcxGmUg9caQzjHbjUrKXGe","ADMIN"]
+[2022-02-23T01:52:43.935Z][QUERY]: SELECT `User`.`id` AS `User_id`, `User`.`status` AS `User_status`, `User`.`created_at` AS `User_created_at` FROM `users` `User` WHERE `User`.`id` = ? -- PARAMETERS: [1]
+[2022-02-23T01:52:43.952Z][QUERY]: COMMIT
